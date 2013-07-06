@@ -36,7 +36,7 @@ class BasicTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testDifferentYearSameMonthSameDayDifferentTime() {
-    $this->_testEquals('September 1, 2013 7:00am until September 1, 2014 at 5:00pm (-0700)', '2013-09-01T07:00:00-07:00', '2014-09-01T17:00:00-07:00');
+    $this->_testEquals('September 1, 2013 7:00am until September 1, 2014 5:00pm (-0700)', '2013-09-01T07:00:00-07:00', '2014-09-01T17:00:00-07:00');
   }
   
 }
