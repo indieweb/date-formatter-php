@@ -15,7 +15,11 @@ class BasicTest extends PHPUnit_Framework_TestCase {
     $this->_testEquals(null, 'invalid');
   }
 
-  public function testStartDateOnly() {
+  public function testInvalidEndDate() {
+    $this->_testEquals(null, '2013-10-31T19:00:00-07:00', 'invalid');
+  }
+
+  public function testStartDateAndTimeOnly() {
     $this->_testEquals('October 31, 2013 at 7:10pm (-0700)', '2013-10-31T19:10:00-07:00');
   }
 
@@ -37,6 +41,14 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 
   public function testDifferentYearSameMonthSameDayDifferentTime() {
     $this->_testEquals('September 1, 2013 7:00am until September 1, 2014 5:00pm (-0700)', '2013-09-01T07:00:00-07:00', '2014-09-01T17:00:00-07:00');
+  }
+
+  public function testTimezoneWithNoColons() {
+    $this->_testEquals('December 31, 2013 7:00am until January 1 at 5:00pm (-0700)', '2013-12-31T07:00:00-0700', '2013-01-01T17:00:00-0700');
+  }
+
+  public function testDateFormatNoT() {
+    $this->_testEquals('December 31, 2013 7:00am until January 1 at 5:00pm (-0700)', '2013-12-31 07:00:00-0700', '2013-01-01 17:00:00-0700');
   }
   
 }
