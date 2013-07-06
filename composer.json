@@ -1,0 +1,22 @@
+{
+  "name": "IndieWeb/DateFormatter",
+  "type": "library",
+  "description": "Render dates and date ranges in a human-readable format, including proper microformats-2 markup",
+  "keywords": ["microformats", "microformats 2", "date", "format"],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/indieweb/date-formatter-php",
+  "authors" : [
+    {
+      "name": "Aaron Parecki",
+      "homepage": "http://aaronparecki.com"
+    }
+  ],
+  "require": {
+      "php": ">=5.3.0",
+  },
+  "autoload": {
+    "psr-0": {
+      "IndieWeb": "src/"
+    }
+  }
+}
