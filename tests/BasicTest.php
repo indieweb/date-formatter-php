@@ -50,5 +50,21 @@ class BasicTest extends PHPUnit_Framework_TestCase {
   public function testDateFormatNoT() {
     $this->_testEquals('December 31, 2013 7:00am until January 1 at 5:00pm (-0700)', '2013-12-31 07:00:00-0700', '2013-01-01 17:00:00-0700');
   }
+
+  public function testDateOnlyStartDateOnly() {
+    $this->_testEquals('September 3, 2013', '2013-09-03');
+  }
+
+  public function testDateOnlySameYearSameMonthDifferentDay() {
+    $this->_testEquals('September 3-8, 2013', '2013-09-03', '2013-09-08');
+  }
+
+  public function testDateOnlySameYearDifferentMonthDifferentDay() {
+    $this->_testEquals('September 28 through October 3, 2013', '2013-09-28', '2013-10-03');
+  }
+
+  public function testDateOnlyDifferentYearDifferentMonthDifferentDay() {
+    $this->_testEquals('December 30, 2013 through January 2, 2014', '2013-12-30', '2014-01-02');
+  }
   
 }

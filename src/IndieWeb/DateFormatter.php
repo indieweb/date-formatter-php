@@ -4,6 +4,7 @@ class DateFormatter {
   // public static $timezoneOffsetFormat = 'P';  // -07:00
 
   private static $_regexDateTimeTimezone = '/([0-9]{4}-[0-9]{2}-[0-9]{2})[T ]([0-9]{2}:[0-9]{2}:[0-9]{2})([-+][0-9]{2}):?([0-9]{2})/';
+  private static $_regexDate = '/[0-9]{4}-[0-9]{2}-[0-9]{2}/';
 
   public static function format($startISO, $endISO=false, $html=true) {
 
@@ -27,6 +28,7 @@ class DateFormatter {
       ob_start();
       if($endISO) {
         if($start->format('Y') != $end->format('Y')) {
+          // Different year
           self::_renderDifferentYearWithTime($start, $end, $startISO, $endISO, $html);
         } else {
           if($start->format('F') == $end->format('F')) { 
@@ -48,7 +50,39 @@ class DateFormatter {
       }
       return ob_get_clean();
 
-    } elseif(preg_match('//', $startISO)) {
+    } elseif(preg_match(self::$_regexDate, $startISO)) {
+      $start = DateTime::createFromFormat('Y-m-d', $startISO);
+
+      $end = false;
+      if($endISO) {
+        if(preg_match(self::$_regexDate, $endISO)) {
+          $end = DateTime::createFromFormat('Y-m-d', $endISO);
+        }
+      }
+
+      // Return null if the start date could not be parsed, or if an end date was specified but could not be parsed
+      if($start === false || ($endISO && $end === false)) {
+        return null;
+      }
+
+      ob_start();
+      if($endISO) {
+        if($start->format('Y') != $end->format('Y')) {
+          // Different year
+          self::_renderDifferentYear($start, $end, $startISO, $endISO, $html);
+        } else {
+          if($start->format('F') != $end->format('F')) {
+            // Different month
+            self::_renderDifferentMonth($start, $end, $startISO, $endISO, $html);
+          } else {
+            // Same month
+            self::_renderDifferentDay($start, $end, $startISO, $endISO, $html);
+          }
+        }
+      } else {
+        self::_renderStartOnly($start, $startISO, $html);
+      }
+      return ob_get_clean();
 
     }
 
@@ -62,7 +96,6 @@ class DateFormatter {
   }
 
   private static function _renderDifferentYearWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
-    // Different year
     if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
     echo $start->format('F j, Y g:ia');
     if($html) echo '</time>';
@@ -105,5 +138,42 @@ class DateFormatter {
     echo $end->format('F j \a\t g:ia (O)');
     if($html) echo '</time>';
   }
+
+  private static function _renderStartOnly(DateTime $start, $startISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y');
+    if($html) echo '</time>';
+  }
+
+  private static function _renderDifferentDay(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j');
+    if($html) echo '</time>';
+    echo '-';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('j, Y');
+    if($html) echo '</time>';
+  }
+
+  private static function _renderDifferentMonth(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j');
+    if($html) echo '</time>';
+    echo ' through ';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('F j, Y');
+    if($html) echo '</time>';
+  }
+
+  private static function _renderDifferentYear(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y');
+    if($html) echo '</time>';
+    echo ' through ';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('F j, Y');
+    if($html) echo '</time>';
+  }
+
 
 }
