@@ -16,49 +16,20 @@ class DateFormatter {
 
     if($endISO) {
       if($start->format('Y') != $end->format('Y')) {
-        // Different year
-        if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
-        echo $start->format('F j, Y g:ia');
-        if($html) echo '</time>';
-        echo ' until ';
-        if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
-        echo $end->format('F j, Y g:ia (O)');
-        if($html) echo '</time>';
+        self::_renderDifferentYear($start, $end, $startISO, $endISO, $html);
       } else {
         if($start->format('F') == $end->format('F')) { 
           // Same month
           if($start->format('j') == $end->format('j')) {
             // Same month and day
-            if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
-            echo $start->format('F j, Y');
-            echo ' from ';
-            echo $start->format('g:ia');
-            if($html) echo '</time>';
-            echo ' to ';
-            if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
-            echo $end->format('g:ia (O)');
-            if($html) echo '</time>';
+            self::_renderSameYearSameMonthSameDay($start, $end, $startISO, $endISO, $html);
           } else {
             // Same month, different day
-            if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
-            echo $start->format('F j, Y');
-            echo ' at ';
-            echo $start->format('g:ia');
-            if($html) echo '</time>';
-            echo ' until ';
-            if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
-            echo $end->format('M j \a\t g:ia (O)');
-            if($html) echo '</time>';
+            self::_renderSameYearSameMonthDifferentDay($start, $end, $startISO, $endISO, $html);
           }
         } else {
           // Different month
-          if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
-          echo $start->format('F j, Y g:ia');
-          if($html) echo '</time>';
-          echo ' until ';
-          if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
-          echo $end->format('F j \a\t g:ia (O)');
-          if($html) echo '</time>';
+          self::_renderSameYearDifferentMonthDifferentDay($start, $end, $startISO, $endISO, $html);
         }
       }
     } else {
@@ -68,4 +39,50 @@ class DateFormatter {
     }
     return ob_get_clean();
   }
+
+  private static function _renderDifferentYear(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    // Different year
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y g:ia');
+    if($html) echo '</time>';
+    echo ' until ';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('F j, Y g:ia (O)');
+    if($html) echo '</time>';
+  }
+
+  private static function _renderSameYearSameMonthSameDay(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y');
+    echo ' from ';
+    echo $start->format('g:ia');
+    if($html) echo '</time>';
+    echo ' to ';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('g:ia (O)');
+    if($html) echo '</time>';
+  }
+
+  private static function _renderSameYearSameMonthDifferentDay(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y');
+    echo ' at ';
+    echo $start->format('g:ia');
+    if($html) echo '</time>';
+    echo ' until ';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('M j \a\t g:ia (O)');
+    if($html) echo '</time>';
+  }
+
+  private static function _renderSameYearDifferentMonthDifferentDay(DateTime $start, DateTime $end, $startISO, $endISO, $html) {
+    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y g:ia');
+    if($html) echo '</time>';
+    echo ' until ';
+    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    echo $end->format('F j \a\t g:ia (O)');
+    if($html) echo '</time>';
+  }
+
 }
