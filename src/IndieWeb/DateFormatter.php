@@ -1,4 +1,8 @@
 <?php
+namespace IndieWeb;
+
+use DateTime;
+
 class DateFormatter {
   public static $timezoneOffsetFormat = 'O';  // -0700
   // public static $timezoneOffsetFormat = 'P';  // -07:00

@@ -10,7 +10,7 @@ Usage
 ### Date Range with Time
 
 ```php
-echo DateFormatter::format('2013-10-08T07:00:00-07:00', '2013-10-08T17:00:00-07:00');
+echo IndieWeb\DateFormatter::format('2013-10-08T07:00:00-07:00', '2013-10-08T17:00:00-07:00');
 ```
 
 outputs
@@ -36,7 +36,7 @@ October 8, 2013 from 7:00am to 5:00pm (-0700)
 ### Date Range with No Time
 
 ```php
-echo DateFormatter::format('2013-10-08', '2013-10-11');
+echo IndieWeb\DateFormatter::format('2013-10-08', '2013-10-11');
 ```
 
 outputs
@@ -63,6 +63,8 @@ Other Examples
 This example shows how progressively more data is added to the output as the start and end dates have less in common with each other.
 
 ```php
+use IndieWeb\DateFormatter;
+
 echo DateFormatter::format('2013-09-03', '2013-09-08');
 // September 3-8, 2013
 
@@ -76,6 +78,8 @@ echo DateFormatter::format('2013-12-30', '2014-01-02');
 Here are similar examples when the dates include times as well.
 
 ```php
+use IndieWeb\DateFormatter;
+
 echo DateFormatter::format('2013-10-08T07:00:00-07:00', '2013-10-08T17:00:00-07:00');
 // October 8, 2013 from 7:00am to 5:00pm (-0700)
 

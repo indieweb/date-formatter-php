@@ -3,11 +3,11 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 
   public function setUp() {
     date_default_timezone_set('UTC');
-    DateFormatter::$timezoneOffsetFormat = 'O';
+    IndieWeb\DateFormatter::$timezoneOffsetFormat = 'O';
   }
 
   private function _testEquals($expected, $start, $end=false) {
-    $formatted = DateFormatter::format($start, $end, false);
+    $formatted = IndieWeb\DateFormatter::format($start, $end, false);
     $this->assertEquals($expected, $formatted);
   }
 
