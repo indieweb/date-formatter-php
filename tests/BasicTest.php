@@ -47,6 +47,10 @@ class BasicTest extends PHPUnit_Framework_TestCase {
     $this->_testEquals('December 31, 2013 7:00am until January 1, 2014 5:00pm (-0700)', '2013-12-31T07:00:00-0700', '2014-01-01T17:00:00-0700');
   }
 
+  public function testNoTimezone() {
+    $this->_testEquals('October 8, 2013 from 7:00am to 5:00pm', '2013-10-08T07:00:00', '2013-10-08T17:00:00');
+  }
+
   public function testDateFormatNoT() {
     $this->_testEquals('December 31, 2013 7:00am until January 1, 2014 5:00pm (-0700)', '2013-12-31 07:00:00-0700', '2014-01-01 17:00:00-0700');
   }
