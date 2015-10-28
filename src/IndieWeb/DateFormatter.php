@@ -12,6 +12,14 @@ class DateFormatter {
 
   public static function format($startISO, $endISO=false, $html=true) {
 
+    if(is_object($startISO) && get_class($startISO) == 'DateTime') {
+      $startISO = $startISO->format('c');
+    }
+
+    if(is_object($endISO) && get_class($endISO) == 'DateTime') {
+      $endISO = $endISO->format('c');
+    }
+
     $includeStartTimezone = false;
 
     if(preg_match(self::$_regexDateTimeTimezone, $startISO, $ms)) {
@@ -52,7 +60,7 @@ class DateFormatter {
           // Different year
           self::_renderDifferentYearWithTime($start, $end, $startISO, $endISO, $html, $includeStartTimezone, $includeEndTimezone);
         } else {
-          if($start->format('F') == $end->format('F')) { 
+          if($start->format('F') == $end->format('F')) {
             // Same month
             if($start->format('j') == $end->format('j')) {
               // Same month and day
