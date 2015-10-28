@@ -19,6 +19,10 @@ class BasicTest extends PHPUnit_Framework_TestCase {
     $this->_testEquals(null, '2013-10-31T19:00:00-07:00', 'invalid');
   }
 
+  public function testWithDateObjects() {
+    $this->_testEquals('October 8, 2013 from 7:00am to 5:00pm (-0700)', new DateTime('2013-10-08T07:00:00-07:00'), new DateTime('2013-10-08T17:00:00-07:00'));
+  }
+
   public function testStartDateAndTimeOnly() {
     $this->_testEquals('October 31, 2013 at 7:10pm (-0700)', '2013-10-31T19:10:00-07:00');
   }
@@ -92,5 +96,5 @@ class BasicTest extends PHPUnit_Framework_TestCase {
   public function testTZDiffDifferentYearSameMonthSameDayDifferentTime() {
     $this->_testEquals('September 1, 2013 7:00am (-0400) until September 1, 2014 5:00pm (-0700)', '2013-09-01T07:00:00-04:00', '2014-09-01T17:00:00-07:00');
   }
-  
+
 }
