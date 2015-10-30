@@ -3,7 +3,7 @@ Date Formatter
 
 Render dates and date ranges in a human-readable format, including proper microformats-2 markup.
 
-[![Build Status](https://travis-ci.org/indieweb/date-formatter-php.png?branch=master)](http://travis-ci.org/indieweb/date-formatter-php)
+[![Build Status](https://travis-ci.org/indieweb/date-formatter-php.svg?branch=master)](http://travis-ci.org/indieweb/date-formatter-php)
 
 Usage
 -----
