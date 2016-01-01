@@ -10,7 +10,7 @@ class DateFormatter {
   private static $_regexDateTimeTimezone = '/([0-9]{4}-[0-9]{2}-[0-9]{2})[T ]([0-9]{2}:[0-9]{2}:[0-9]{2})(?:([-+][0-9]{2}):?([0-9]{2}))?/';
   private static $_regexDate = '/[0-9]{4}-[0-9]{2}-[0-9]{2}/';
 
-  public static function format($startISO, $endISO=false, $html=true) {
+  public static function format($startISO, $endISO=false, $startClass='dt-start', $endClass='dt-end') {
 
     if(is_object($startISO) && get_class($startISO) == 'DateTime') {
       $startISO = $startISO->format('c');
@@ -58,24 +58,24 @@ class DateFormatter {
       if($endISO) {
         if($start->format('Y') != $end->format('Y')) {
           // Different year
-          self::_renderDifferentYearWithTime($start, $end, $startISO, $endISO, $html, $includeStartTimezone, $includeEndTimezone);
+          self::_renderDifferentYearWithTime($start, $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
         } else {
           if($start->format('F') == $end->format('F')) {
             // Same month
             if($start->format('j') == $end->format('j')) {
               // Same month and day
-              self::_renderSameYearSameMonthSameDayWithTime($start, $end, $startISO, $endISO, $html, $includeStartTimezone, $includeEndTimezone);
+              self::_renderSameYearSameMonthSameDayWithTime($start, $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
             } else {
               // Same month, different day
-              self::_renderSameYearSameMonthDifferentDayWithTime($start, $end, $startISO, $endISO, $html, $includeStartTimezone, $includeEndTimezone);
+              self::_renderSameYearSameMonthDifferentDayWithTime($start, $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
             }
           } else {
             // Different month
-            self::_renderSameYearDifferentMonthDifferentDayWithTime($start, $end, $startISO, $endISO, $html, $includeStartTimezone, $includeEndTimezone);
+            self::_renderSameYearDifferentMonthDifferentDayWithTime($start, $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
           }
         }
       } else {
-        self::_renderStartOnlyWithTime($start, $startISO, $html, $includeStartTimezone, $includeEndTimezone);
+        self::_renderStartOnlyWithTime($start, $startISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
       }
       return ob_get_clean();
 
@@ -98,18 +98,18 @@ class DateFormatter {
       if($endISO) {
         if($start->format('Y') != $end->format('Y')) {
           // Different year
-          self::_renderDifferentYear($start, $end, $startISO, $endISO, $html);
+          self::_renderDifferentYear($start, $end, $startISO, $endISO, $startClass, $endClass);
         } else {
           if($start->format('F') != $end->format('F')) {
             // Different month
-            self::_renderDifferentMonth($start, $end, $startISO, $endISO, $html);
+            self::_renderDifferentMonth($start, $end, $startISO, $endISO, $startClass, $endClass);
           } else {
             // Same month
-            self::_renderDifferentDay($start, $end, $startISO, $endISO, $html);
+            self::_renderDifferentDay($start, $end, $startISO, $endISO, $startClass, $endClass);
           }
         }
       } else {
-        self::_renderStartOnly($start, $startISO, $html);
+        self::_renderStartOnly($start, $startISO, $startClass, $endClass);
       }
       return ob_get_clean();
 
@@ -118,90 +118,90 @@ class DateFormatter {
     return null;
   }
 
-  private static function _renderStartOnlyWithTime(DateTime $start, $startISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderStartOnlyWithTime(DateTime $start, $startISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y \a\t g:ia' . ($includeEndTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderDifferentYearWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderDifferentYearWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y g:ia' . ($includeStartTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo ' until ';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('F j, Y g:ia' . ($includeEndTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderSameYearSameMonthSameDayWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderSameYearSameMonthSameDayWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y');
     echo ' from ';
     echo $start->format('g:ia' . ($includeStartTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo ' to ';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('g:ia' . ($includeEndTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderSameYearSameMonthDifferentDayWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderSameYearSameMonthDifferentDayWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y');
     echo ' at ';
     echo $start->format('g:ia' . ($includeStartTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo ' until ';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('M j \a\t g:ia' . ($includeEndTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderSameYearDifferentMonthDifferentDayWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderSameYearDifferentMonthDifferentDayWithTime(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y g:ia' . ($includeStartTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo ' until ';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('F j \a\t g:ia' . ($includeEndTimezone ? ' (O)' : ''));
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderStartOnly(DateTime $start, $startISO, $html, $includeStartTimezone=false, $includeEndTimezone=false) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderStartOnly(DateTime $start, $startISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=false) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderDifferentDay(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderDifferentDay(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo '-';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('j, Y');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderDifferentMonth(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderDifferentMonth(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo ' through ';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('F j, Y');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
-  private static function _renderDifferentYear(DateTime $start, DateTime $end, $startISO, $endISO, $html, $includeStartTimezone=false, $includeEndTimezone=true) {
-    if($html) echo '<time class="dt-start" datetime="' . $startISO . '">';
+  private static function _renderDifferentYear(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
     echo ' through ';
-    if($html) echo '<time class="dt-end" datetime="' . $endISO . '">';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('F j, Y');
-    if($html) echo '</time>';
+    if($startClass) echo '</time>';
   }
 
 
