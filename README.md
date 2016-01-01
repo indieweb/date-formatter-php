@@ -18,8 +18,8 @@ outputs
 ```html
 <time class="dt-start" datetime="2013-10-08T07:00:00-07:00">
   October 8, 2013 from 7:00am
-</time> 
-to 
+</time>
+to
 <time class="dt-end" datetime="2013-10-08T17:00:00-07:00">
   5:00pm (-0700)
 </time>
@@ -93,6 +93,26 @@ echo DateFormatter::format('2013-12-31T07:00:00-07:00', '2014-01-01T17:00:00-07:
 // December 31, 2013 7:00am until January 1, 2014 5:00pm (-0700)
 ```
 
+Alternate Class Names
+---------------------
+
+If you want the HTML to include Microformats classes other than "dt-start" and "dt-end", you can pass class names as additional parameters.
+
+```php
+echo IndieWeb\DateFormatter::format('2013-10-08T07:00:00-0700', '2013-10-08T08:50:00-0700', 'dt-departure', 'dt-arrival');
+```
+
+```html
+<time class="dt-departure" datetime="2013-10-08T07:00:00-07:00">
+  October 8, 2013 from 7:00am
+</time>
+to
+<time class="dt-arrival" datetime="2013-10-08T8:50:00-07:00">
+  8:50am (-0700)
+</time>
+```
+
+
 
 Tests
 -----
@@ -120,7 +140,7 @@ If you see other input or output formats you would like handled, please open an 
 License
 -------
 
-Copyright 2013 by Aaron Parecki
+Copyright 2015 by Aaron Parecki
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
