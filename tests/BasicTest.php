@@ -11,6 +11,11 @@ class BasicTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($expected, $formatted);
   }
 
+  private function _testTimeEquals($expected, $start, $end=false) {
+    $formatted = IndieWeb\DateFormatter::formatTime($start, $end, false);
+    $this->assertEquals($expected, $formatted);
+  }
+
   public function testInvalidStartDate() {
     $this->_testEquals(null, 'invalid');
   }
@@ -95,6 +100,28 @@ class BasicTest extends PHPUnit_Framework_TestCase {
 
   public function testTZDiffDifferentYearSameMonthSameDayDifferentTime() {
     $this->_testEquals('September 1, 2013 7:00am (-0400) until September 1, 2014 5:00pm (-0700)', '2013-09-01T07:00:00-04:00', '2014-09-01T17:00:00-07:00');
+  }
+
+  // Tests for formatting only times
+
+  public function testTimeStartOnlyNoTime() {
+    $this->_testTimeEquals(null, '2015-01-01');
+  }
+
+  public function testTimeStartOnlyWithTimezone() {
+    $this->_testTimeEquals('9:00am (-0800)', '2015-01-01T09:00:00-0800');
+  }
+
+  public function testTimeStartOnlyNoTimezone() {
+    $this->_testTimeEquals('9:00am', '2015-01-01T09:00:00');
+  }
+
+  public function testTimeDifferentEndTime() {
+    $this->_testTimeEquals('9:00am - 10:00am (-0800)', '2015-01-01T09:00:00-0800', '2015-01-01T10:00:00-0800');
+  }
+
+  public function testTimeDifferentEndTimeZone() {
+    $this->_testTimeEquals('9:00am (-0700) - 12:00pm (-0800)', '2015-01-01T09:00:00-0700', '2015-01-01T12:00:00-0800');
   }
 
 }

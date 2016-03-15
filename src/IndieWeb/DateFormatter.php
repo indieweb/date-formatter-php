@@ -118,6 +118,80 @@ class DateFormatter {
     return null;
   }
 
+  public static function formatTime($startISO, $endISO, $startClass='dt-start', $endClass='dt-end') {
+
+    if(is_object($startISO) && get_class($startISO) == 'DateTime') {
+      $startISO = $startISO->format('c');
+    }
+
+    if(is_object($endISO) && get_class($endISO) == 'DateTime') {
+      $endISO = $endISO->format('c');
+    }
+
+    if(preg_match(self::$_regexDateTimeTimezone, $startISO, $ms)) {
+      if(array_key_exists(3, $ms)) {
+        $startISO = $ms[1].'T'.$ms[2].$ms[3].':'.$ms[4];
+        $start = DateTime::createFromFormat('Y-m-d\TH:i:sT', $startISO);
+        $includeEndTimezone = true; // If the start time includes a timezone, show the timezone (on the end time)
+      } else {
+        $startISO = $ms[1].'T'.$ms[2];
+        $start = DateTime::createFromFormat('Y-m-d\TH:i:s', $startISO);
+        $includeEndTimezone = false;
+      }
+
+      $includeStartTimezone = false;
+
+      $end = false;
+      if($endISO) {
+        if(preg_match(self::$_regexDateTimeTimezone, $endISO, $me)) {
+          if(array_key_exists(3, $me)) {
+            $endISO = $me[1].'T'.$me[2].$me[3].':'.$me[4];
+            $end = DateTime::createFromFormat('Y-m-d\TH:i:sT', $endISO);
+            $includeEndTimezone = true;
+            if($start->format('T') != $end->format('T'))
+              $includeStartTimezone = true; // Show the start timezone if it's different from the end timezone
+          }
+        }
+      }
+
+      // Return null if the start date could not be parsed, or if an end date was specified but could not be parsed
+      if($start === false || ($endISO && $end === false)) {
+        return null;
+      }
+
+      ob_start();
+      if($endISO) {
+        self::_renderStartAndEndTimeOnly($start, $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
+      } else {
+        self::_renderStartTimeOnly($start, $startISO, $startClass, $endClass, $includeStartTimezone, $includeEndTimezone);
+      }
+      return ob_get_clean();
+
+    }
+
+    return null;
+  }
+
+  // Time Only
+
+  private static function _renderStartTimeOnly(DateTime $start, $startISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
+    echo $start->format('g:ia' . ($includeEndTimezone ? ' (O)' : ''));
+    if($startClass) echo '</time>';
+  }
+
+  private static function _renderStartAndEndTimeOnly(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
+    echo $start->format('g:ia' . ($includeStartTimezone ? ' (O)' : ''));
+    if($startClass) echo '</time>';
+    echo ' - ';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
+    echo $end->format('g:ia' . ($includeEndTimezone ? ' (O)' : ''));
+    if($startClass) echo '</time>';
+  }
+
+  // Date and Time
+
   private static function _renderStartOnlyWithTime(DateTime $start, $startISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
     if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
     echo $start->format('F j, Y \a\t g:ia' . ($includeEndTimezone ? ' (O)' : ''));
