@@ -68,6 +68,10 @@ class BasicTest extends PHPUnit_Framework_TestCase {
     $this->_testEquals('September 3, 2013', '2013-09-03');
   }
 
+  public function testDateOnlySameDay() {
+    $this->_testEquals('September 3, 2013', '2013-09-03', '2013-09-03');
+  }
+
   public function testDateOnlySameYearSameMonthDifferentDay() {
     $this->_testEquals('September 3-8, 2013', '2013-09-03', '2013-09-08');
   }

@@ -105,7 +105,11 @@ class DateFormatter {
             self::_renderDifferentMonth($start, $end, $startISO, $endISO, $startClass, $endClass);
           } else {
             // Same month
-            self::_renderDifferentDay($start, $end, $startISO, $endISO, $startClass, $endClass);
+            if($start->format('d') != $end->format('d')) {
+              self::_renderDifferentDay($start, $end, $startISO, $endISO, $startClass, $endClass);
+            } else {
+              self::_renderSameDay($start, $end, $startISO, $endISO, $startClass, $endClass);
+            }
           }
         }
       } else {
@@ -256,6 +260,13 @@ class DateFormatter {
     if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '">';
     echo $end->format('j, Y');
     if($startClass) echo '</time>';
+  }
+
+  private static function _renderSameDay(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
+    if($startClass) echo '<time class="'.$startClass.'" datetime="' . $startISO . '">';
+    echo $start->format('F j, Y');
+    if($startClass) echo '</time>';
+    if($startClass) echo '<time class="'.$endClass.'" datetime="' . $endISO . '"></time>';
   }
 
   private static function _renderDifferentMonth(DateTime $start, DateTime $end, $startISO, $endISO, $startClass, $endClass, $includeStartTimezone=false, $includeEndTimezone=true) {
